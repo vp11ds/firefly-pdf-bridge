@@ -1,0 +1,60 @@
+name: firefly-test
+
+services:
+  db:
+    image: mariadb:11
+    container_name: firefly-test-db
+    environment:
+      MARIADB_DATABASE: firefly
+      MARIADB_USER: firefly
+      MARIADB_PASSWORD: ${DB_PASSWORD:?Copy .env.example to .env and set DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?Copy .env.example to .env and set DB_ROOT_PASSWORD}
+    volumes:
+      - firefly_test_db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
+  app:
+    image: fireflyiii/core:latest
+    container_name: firefly-test-app
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      APP_KEY: ${APP_KEY:?Copy .env.example to .env and set APP_KEY}
+      APP_URL: http://localhost:8080
+      SITE_OWNER: test@example.invalid
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: firefly
+      DB_USERNAME: firefly
+      DB_PASSWORD: ${DB_PASSWORD:?Copy .env.example to .env and set DB_PASSWORD}
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - firefly_test_upload:/var/www/html/storage/upload
+    restart: unless-stopped
+
+  importer:
+    image: fireflyiii/data-importer:latest
+    container_name: firefly-test-importer
+    depends_on:
+      - app
+    environment:
+      FIREFLY_III_URL: http://app:8080
+      VANITY_URL: http://localhost:8080
+    ports:
+      - "127.0.0.1:8081:8080"
+    volumes:
+      - firefly_test_import:/import
+    restart: unless-stopped
+
+volumes:
+  firefly_test_db:
+  firefly_test_upload:
+  firefly_test_import:

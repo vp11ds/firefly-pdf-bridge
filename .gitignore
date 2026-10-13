@@ -1,0 +1,18 @@
+.env
+.env.*
+!.env.example
+
+# Local datasets and statement files
+/data/
+*.pdf
+*.csv
+
+# Local processing state and logs
+*.state.json
+*.log
+
+# Python and editor artifacts
+__pycache__/
+*.py[cod]
+.vscode/
+.idea/
