@@ -1,0 +1,10 @@
+users:
+  # Copy this file to users_database.yml (ignored by Git) and replace the
+  # password with an Authelia Argon2 hash generated inside the SSO container.
+  # Set displayname to the same identity used by Firefly's remote-user guard.
+  testuser:
+    displayname: Test User
+    email: test@example.invalid
+    password: "$argon2id$v=19$m=65536,t=3,p=4$REPLACE_WITH_GENERATED_SALT$REPLACE_WITH_GENERATED_HASH"
+    groups:
+      - admins

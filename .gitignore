@@ -1,6 +1,12 @@
+# Local secrets and generated identity store
 .env
 .env.*
 !.env.example
+firefly/authelia/users_database.yml
+firefly/authelia/db.sqlite3
+firefly/authelia/notification.txt
+firefly/.caddy/
+firefly/root.crt
 
 # Local datasets and statement files
 /data/

@@ -1,0 +1,54 @@
+{
+	admin off
+	auto_https disable_redirects
+}
+
+(secured) {
+	route {
+		request_header -Remote-User
+		request_header -Remote-Email
+		request_header -Remote-Groups
+		request_header -Remote-Name
+		request_header -X-Forwarded-User
+		request_header -X-Forwarded-Email
+		forward_auth sso:9091 {
+			uri /api/authz/forward-auth
+			copy_headers Remote-User Remote-Groups Remote-Name Remote-Email
+		}
+		header {
+			X-Content-Type-Options nosniff
+			X-Frame-Options DENY
+			Referrer-Policy no-referrer
+			-Server
+		}
+	}
+}
+
+auth.firefly.test:8080 {
+	tls internal
+	header {
+		X-Content-Type-Options nosniff
+		X-Frame-Options DENY
+		Referrer-Policy no-referrer
+		-Server
+	}
+	reverse_proxy sso:9091
+}
+
+firefly.test:8080 {
+	tls internal
+	import secured
+	reverse_proxy firefly:8080
+}
+
+importer.firefly.test:8080 {
+	tls internal
+	import secured
+	reverse_proxy importer:8080
+}
+
+bridge.firefly.test:8080 {
+	tls internal
+	import secured
+	respond "PDF bridge is not installed yet. Phase 1 adds it behind this SSO gate." 200
+}
