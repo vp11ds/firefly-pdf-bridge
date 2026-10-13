@@ -7,7 +7,7 @@ This repository is being built in phases. Phase 0 provides one local HTTPS entry
 Requirements: Docker Engine and Docker Compose. No host Python, pip, or apt packages are needed.
 
 1. From this directory, run `./setup-test-env.sh`. It prompts for the SSO email, generates unique TEST secrets inside a pinned Docker image, and writes `.env` with mode `0600`. The `.env` file is ignored by Git.
-2. Create the Authelia password database by running `./firefly/setup-sso-user.sh`. Authelia prompts for the password twice in the terminal; the script writes only its Argon2 hash to ignored `firefly/authelia/users_database.yml` with mode `0600`. Use the same email as the `.env` `SSO_EMAIL` value.
+2. Create a sample Authelia account by running `./firefly/setup-sso-user.sh`. Authelia generates a random password and its Argon2 hash inside Docker. The ignored user database and `firefly/authelia/sample-credentials.txt` are both mode `0600`; the password is not printed. Read that local credentials file when signing in. The sample account email is the `.env` `SSO_EMAIL` value.
 3. Add this mapping to the host's `/etc/hosts`:
 
    ```text

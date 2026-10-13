@@ -47,7 +47,7 @@ services:
       MARIADB_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env}
       MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?Set DB_ROOT_PASSWORD in .env}
     volumes:
-      - firefly_test_db:/var/lib/mysql
+      - firefly_test_db_v2:/var/lib/mysql
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       interval: 5s
@@ -79,7 +79,7 @@ services:
       DB_USERNAME: firefly
       DB_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env}
     volumes:
-      - firefly_test_upload:/var/www/html/storage/upload
+      - firefly_test_upload_v2:/var/www/html/storage/upload
     networks:
       - backend
     restart: unless-stopped
@@ -92,15 +92,15 @@ services:
       VANITY_URL: https://firefly.test:8080
       FIREFLY_III_ACCESS_TOKEN: ${FIREFLY_III_ACCESS_TOKEN:-}
     volumes:
-      - firefly_test_import:/import
+      - firefly_test_import_v2:/import
     networks:
       - backend
     restart: unless-stopped
 
 volumes:
-  firefly_test_db:
-  firefly_test_upload:
-  firefly_test_import:
+  firefly_test_db_v2:
+  firefly_test_upload_v2:
+  firefly_test_import_v2:
   authelia_data:
   caddy_data:
   caddy_config:

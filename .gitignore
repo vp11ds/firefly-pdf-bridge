@@ -3,6 +3,7 @@
 .env.*
 !.env.example
 firefly/authelia/users_database.yml
+firefly/authelia/sample-credentials.txt
 firefly/authelia/db.sqlite3
 firefly/authelia/notification.txt
 firefly/.caddy/
